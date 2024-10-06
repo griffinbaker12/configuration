@@ -9,4 +9,5 @@ export PS1=$'%n@%m:\e[0;36m%~\e[0m$ '
 export EDITOR='vim'
 bindkey -e
 alias ggpush="git push"
-alias venv='[ -d "venv" ] && source venv/bin/activate'
+alias venv='[ ! -d "venv" ] && py -m venv venv;source venv/bin/activate'
+alias ods='vim ~/dotfiles'
