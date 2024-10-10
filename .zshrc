@@ -18,5 +18,7 @@ bindkey -e
 alias ggpush="git push"
 alias venv='[ ! -d "venv" ] && py -m venv venv;source venv/bin/activate'
 alias ods='vim ~/dotfiles'
+bindkey "^D" delete-char-or-list
 
-bindkey '^D' kill-word
+alias c="clear"
+alias sz="source ~/.zshrc"
