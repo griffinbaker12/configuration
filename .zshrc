@@ -15,10 +15,18 @@ setopt autocd
 export CLICOLOR=1
 export EDITOR='vim'
 bindkey -e
-alias ggpush="git push"
+alias ggp="git push"
 alias venv='[ ! -d "venv" ] && py -m venv venv;source venv/bin/activate'
 alias ods='vim ~/dotfiles'
 bindkey "^D" delete-char-or-list
 
 alias c="clear"
 alias sz="source ~/.zshrc"
+alias st="tmux source-file ~/.tmux.conf"
+
+alias vim="nvim"
+
+# Function to create a directory and cd into it
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
