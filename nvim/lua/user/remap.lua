@@ -31,3 +31,8 @@ vim.keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current bu
 
 vim.keymap.set('c', '<Down>', '<C-n>', { noremap = true, silent = true })
 vim.keymap.set('c', '<Up>', '<C-p>', { noremap = true, silent = true })
+
+vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww ~/dotfiles/bin/tmux_sessionizer.sh<CR>", { noremap = true, silent = true })
+
+vim.keymap.set({"n", "v"}, "<leader>y", [["+y]])
+vim.keymap.set("n", "<leader>Y", [["+Y]])
