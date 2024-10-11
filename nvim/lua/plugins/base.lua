@@ -4,18 +4,14 @@ return {
         name = "plenary"
     },
     {
-        "nvim-telescope/telescope.nvim",
-        dependencies = {
-            "plenary"
-        }
-    },
-    {
-        "folke/trouble.nvim",
+        "nvim-tree/nvim-web-devicons",
+        name = "dev-icons"
     },
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate"
     },
+    "christoomey/vim-tmux-navigator",
     "tpope/vim-fugitive",
     "eandrju/cellular-automaton.nvim",
     "folke/zen-mode.nvim",
