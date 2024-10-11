@@ -24,6 +24,7 @@ return {
         vim.keymap.set('n', '<leader>ps', function()
             builtin.grep_string({ search = vim.fn.input("Grep > ") })
         end)
+        vim.keymap.set('n', '<leader>ls', "<cmd>Telescope live_grep<cr>")
         vim.keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>")
         vim.keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>")
 
