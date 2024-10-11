@@ -11,7 +11,6 @@ return {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate"
     },
-    "christoomey/vim-tmux-navigator",
     "tpope/vim-fugitive",
     "eandrju/cellular-automaton.nvim",
     "folke/zen-mode.nvim",
