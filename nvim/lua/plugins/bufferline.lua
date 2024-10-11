@@ -1,15 +1,13 @@
 return {
     "akinsho/bufferline.nvim",
-    dependencies = {
-        "dev-icons"
-    },
     version = "*",
+    dependencies = "nvim-tree/nvim-web-devicons", -- ensure you have devicons as a dependency
     opts = {
         options = {
-            mode = "tabs",
-            separator_style = "slant",
-            show_close_icon = false,   
-            show_buffer_close_icons = false,
-        },
-    },
+            mode = "tabs",                   -- Use "tabs" mode
+            separator_style = "slant",        -- Slant separator style
+            show_close_icon = false,          -- Hide close icon
+            show_buffer_close_icons = false,  -- Hide buffer close icons
+        }
+    }
 }

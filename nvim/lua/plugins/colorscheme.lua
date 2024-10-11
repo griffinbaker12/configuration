@@ -1,15 +1,15 @@
 return {
-  {
     "folke/tokyonight.nvim",
+    priority = 1000,
     config = function()
-        local border = "#547998"
         require("tokyonight").setup({
             style = "night",
-            on_colors = function(colors)
-                colors.border = border
-            end,
+            terminal_colors = true,
+            styles = {
+                comments = { italic = false },
+                keywords = { italic = false },
+            },
         })
-      vim.cmd([[colorscheme tokyonight]])
+        vim.cmd([[colorscheme tokyonight]])
     end,
-  },
 }
