@@ -30,3 +30,9 @@ alias vim="nvim"
 mkcd() {
     mkdir -p "$1" && cd "$1"
 }
+
+setopt extended_glob
+
+add_origin_remote () {
+    git remote add origin "$1"
+}
