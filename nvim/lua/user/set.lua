@@ -8,7 +8,7 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 
-vim.opt.wrap = false 
+vim.opt.wrap = false
 
 vim.opt.smartindent = true
 
@@ -36,3 +36,5 @@ vim.opt.cursorline = true
 
 vim.g.netrw_banner = 0
 vim.g.netrw_winsize = 25
+
+vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
