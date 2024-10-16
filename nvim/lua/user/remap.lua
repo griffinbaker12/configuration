@@ -5,6 +5,14 @@ vim.keymap.set("i", "jk", "<Esc>", { noremap = true })
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
+
+vim.keymap.set("n", "J", "mzJ`z")
+
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+
 vim.keymap.set("n", "<leader>cs", ":nohlsearch<CR>", { noremap = true, silent = true })
 
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
@@ -27,6 +35,10 @@ vim.keymap.set("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current spli
 vim.keymap.set("n", "<leader>sr", "<C-w>L", { desc = "Move split to the right" })
 vim.keymap.set("n", "<leader>sb", "<C-w>J", { desc = "Move split to the bottom" })
 
+vim.keymap.set("n", "Q", "<nop>")
+
+vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+
 vim.keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" })
 vim.keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" })
 vim.keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to next tab
@@ -36,6 +48,9 @@ vim.keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current bu
 vim.keymap.set("c", "<Down>", "<C-n>", { noremap = true, silent = true })
 vim.keymap.set("c", "<Up>", "<C-p>", { noremap = true, silent = true })
 
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
+vim.keymap.set({ "n", "v" }, "<leader>D", [["_D]])
+
 vim.keymap.set(
 	"n",
 	"<C-f>",
@@ -43,5 +58,5 @@ vim.keymap.set(
 	{ noremap = true, silent = true }
 )
 
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
+vim.keymap.set({ "n", "v" }, "<leader>x", [["+x]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])

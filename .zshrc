@@ -24,7 +24,7 @@ alias c="clear"
 alias sz="source ~/.zshrc"
 alias st="tmux source-file ~/.tmux.conf"
 
-alias vim="nvim"
+alias v="nvim"
 
 # Function to create a directory and cd into it
 mkcd() {
