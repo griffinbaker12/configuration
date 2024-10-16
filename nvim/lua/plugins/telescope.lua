@@ -13,7 +13,8 @@ return {
                 path_display = { "smart" },
                 mappings = {
                     i = {
-                        ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+                        ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
+                        ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
                     },
                 },
             },
@@ -33,35 +34,35 @@ return {
         vim.keymap.set("n", "[q", "<cmd>cprevious<cr>", { desc = "Previous quickfix item" })
         vim.keymap.set("n", "]q", "<cmd>cnext<cr>", { desc = "Next quickfix item" })
 
-        local function remove_qf_items(start_line, end_line)
-            local qfall = vim.fn.getqflist()
-            for i = end_line, start_line, -1 do
-                table.remove(qfall, i)
-            end
-
-            if #qfall == 0 then
-                vim.cmd("cclose")  -- Close the quickfix list if empty
-            else
-                vim.fn.setqflist(qfall, 'r')
-                vim.cmd('cfirst')
-                vim.cmd('clast')
-            end
-        end
-
-        local function remove_qf_item(mode)
-            if mode == 'v' then
-                -- Get the selected range in visual mode
-                local start_line = vim.fn.line("'<")
-                local end_line = vim.fn.line("'>")
-                remove_qf_items(start_line, end_line)
-            else
-                -- If not in visual mode, remove the single item under the cursor
-                remove_qf_items(vim.fn.line('.'), vim.fn.line('.'))
-            end
-        end
-
+        -- local function remove_qf_items(start_line, end_line)
+        --     local qfall = vim.fn.getqflist()
+        --     for i = end_line, start_line, -1 do
+        --         table.remove(qfall, i)
+        --     end
+        --
+        --     if #qfall == 0 then
+        --         vim.cmd("cclose")  -- Close the quickfix list if empty
+        --     else
+        --         vim.fn.setqflist(qfall, 'r')
+        --         vim.cmd('cfirst')
+        --         vim.cmd('clast')
+        --     end
+        -- end
+        --
+        -- local function remove_qf_item(mode)
+        --     if mode == 'v' then
+        --         -- Get the selected range in visual mode
+        --         local start_line = vim.fn.line("'<")
+        --         local end_line = vim.fn.line("'>")
+        --         remove_qf_items(start_line, end_line)
+        --     else
+        --         -- If not in visual mode, remove the single item under the cursor
+        --         remove_qf_items(vim.fn.line('.'), vim.fn.line('.'))
+        --     end
+        -- end
+        --
         -- Mapping for normal mode (single item) and visual mode (multiple items)
-        vim.keymap.set("n", "<leader>qd", function() remove_qf_item('n') end)
-        vim.keymap.set("v", "<leader>qd", function() remove_qf_item('v') end)
+        -- vim.keymap.set("n", "<leader>qd", function() remove_qf_item('n') end)
+        -- vim.keymap.set("v", "<leader>qd", function() remove_qf_item('v') end)
     end
 }

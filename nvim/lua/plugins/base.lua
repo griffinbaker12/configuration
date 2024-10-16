@@ -14,4 +14,5 @@ return {
     "tpope/vim-fugitive",
     "eandrju/cellular-automaton.nvim",
     "folke/zen-mode.nvim",
+    "itchyny/vim-qfedit"
 }
