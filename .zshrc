@@ -33,6 +33,8 @@ mkcd() {
 
 setopt extended_glob
 
+alias set_upstream="git push --set-upstream origin main"
+
 add_origin_remote () {
     git remote add origin "$1"
 }
