@@ -1,16 +1,16 @@
 vim.g.mapleader = " "
 
-vim.keymap.set('i', 'jk', '<Esc>', { noremap = true })
+vim.keymap.set("i", "jk", "<Esc>", { noremap = true })
 
-vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
-vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
-vim.keymap.set('n', '<leader>cs', ':nohlsearch<CR>', { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>cs", ":nohlsearch<CR>", { noremap = true, silent = true })
 
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 vim.keymap.set("n", "<leader><leader>", function()
-    vim.cmd("so")
+	vim.cmd("so")
 end)
 
 vim.keymap.set("n", "<leader>fml", "<cmd>CellularAutomaton make_it_rain<CR>")
@@ -27,16 +27,21 @@ vim.keymap.set("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current spli
 vim.keymap.set("n", "<leader>sr", "<C-w>L", { desc = "Move split to the right" })
 vim.keymap.set("n", "<leader>sb", "<C-w>J", { desc = "Move split to the bottom" })
 
-vim.keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" }) 
+vim.keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" })
 vim.keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" })
 vim.keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to next tab
 vim.keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" })
 vim.keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" })
 
-vim.keymap.set('c', '<Down>', '<C-n>', { noremap = true, silent = true })
-vim.keymap.set('c', '<Up>', '<C-p>', { noremap = true, silent = true })
+vim.keymap.set("c", "<Down>", "<C-n>", { noremap = true, silent = true })
+vim.keymap.set("c", "<Up>", "<C-p>", { noremap = true, silent = true })
 
-vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww ~/dotfiles/bin/tmux_sessionizer.sh<CR>", { noremap = true, silent = true })
+vim.keymap.set(
+	"n",
+	"<C-f>",
+	"<cmd>silent !tmux neww ~/dotfiles/bin/tmux_sessionizer.sh<CR>",
+	{ noremap = true, silent = true }
+)
 
-vim.keymap.set({"n", "v"}, "<leader>y", [["+y]])
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
