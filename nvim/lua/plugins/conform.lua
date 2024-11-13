@@ -19,9 +19,9 @@ return {
 				graphql = { "prettier" },
 				liquid = { "prettier" },
 				lua = { "stylua" },
-				python = { "black" },
+				python = { "ruff_format" },
 			},
-			format_on_save = { lsp_fallback = true, async = true, timeout_ms = 1000 },
+			format_after_save = { lsp_fallback = true, timeout_ms = 1000 },
 		})
 
 		vim.keymap.set({ "n", "v" }, "<leader>mp", function()

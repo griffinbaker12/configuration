@@ -17,7 +17,7 @@ export EDITOR='vim'
 bindkey -e
 alias ggp="git push"
 alias venv='[ ! -d "venv" ] && py -m venv venv;source venv/bin/activate'
-alias ods='vim ~/dotfiles'
+alias ods='v ~/dotfiles'
 bindkey "^D" delete-char-or-list
 
 alias c="clear"
@@ -37,4 +37,22 @@ alias set_upstream="git push --set-upstream origin main"
 
 add_origin_remote () {
     git remote add origin "$1"
+}
+
+watch() {
+    if [ $# -eq 0 ]; then
+        echo "Usage: watch <file> [command]"
+        return 1
+    fi
+    local delimiter="$(printf '=%.0s' {1..50})"
+    file="$1"
+    
+    if [ $# -eq 1 ]; then
+        # Default to python3 if no command specified
+        ls "$file" | entr sh -c 'echo "'"$delimiter"'"; echo "Reloaded at: $(date "+%B %d, %Y at %I:%M %p")"; echo "'"$delimiter"'"; python3 "'"$file"'"'
+    else
+        # Use the rest of arguments as the command
+        shift
+        ls "$file" | entr sh -c 'echo "'"$delimiter"'"; echo "Reloaded at: $(date "+%B %d, %Y at %I:%M %p")"; echo "'"$delimiter"'"; '"$*"
+    fi
 }

@@ -59,7 +59,7 @@ return {
 				keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
 
 				opts.desc = "Signature help"
-				keymap.set("i", "<M-h>", function()
+				keymap.set("i", "<M-i>", function()
 					vim.lsp.buf.signature_help()
 				end, opts) -- get help when passing args to a function
 			end,
