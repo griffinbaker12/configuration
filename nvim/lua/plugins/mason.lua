@@ -27,6 +27,7 @@ return {
 				"svelte",
 				"lua_ls",
 				"pyright",
+				"clangd",
 			},
 		})
 		mason_tool_installer.setup({
@@ -35,6 +36,7 @@ return {
 				"stylua",
 				"isort",
 				"ruff",
+				"clang-format",
 			},
 		})
 	end,

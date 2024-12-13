@@ -20,6 +20,15 @@ return {
 				liquid = { "prettier" },
 				lua = { "stylua" },
 				python = { "ruff_format" },
+				cpp = { "clang_format" },
+				hpp = { "clang_format" },
+				c = { "clang_format" },
+				h = { "clang_format" },
+			},
+			formatters = {
+				clang_format = {
+					args = { "--fallback-style=Google" },
+				},
 			},
 			format_after_save = { lsp_fallback = true, timeout_ms = 1000 },
 		})

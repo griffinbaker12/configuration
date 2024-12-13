@@ -1,3 +1,11 @@
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "c", "cpp" },
+	callback = function()
+		vim.bo.shiftwidth = 2
+		vim.bo.softtabstop = 2
+	end,
+})
+
 return {
 	"neovim/nvim-lspconfig",
 	event = { "BufReadPre", "BufNewFile" },
@@ -76,6 +84,21 @@ return {
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
+		local min_severity = {
+			severity = {
+				min = vim.diagnostic.severity.WARN, -- Only show warnings and errors
+			},
+		}
+
+		vim.diagnostic.config({
+			-- Only show errors and warnings
+			severity_sort = true,
+			underline = true,
+			signs = min_severity,
+			virtual_text = min_severity,
+			float = min_severity,
+		})
+
 		mason_lspconfig.setup_handlers({
 			-- default handler for installed servers
 			function(server_name)
@@ -95,6 +118,20 @@ return {
 							},
 							completion = {
 								callSnippet = "Replace",
+							},
+						},
+					},
+				})
+			end,
+			["clangd"] = function()
+				lspconfig["clangd"].setup({
+					capabilities = capabilities,
+					settings = {
+						clangd = {
+							arguments = {
+								"--header-insertion=never",
+								"--fallback-style=Google",
+								"--clang-tidy",
 							},
 						},
 					},
