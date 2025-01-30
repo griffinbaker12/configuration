@@ -137,6 +137,25 @@ return {
 					},
 				})
 			end,
+			["pyright"] = function()
+				lspconfig["pyright"].setup({
+					capabilities = capabilities,
+					settings = {
+						python = {
+							analysis = {
+								diagnosticSeverityOverrides = {
+									reportUnboundVariable = "none",
+									reportInvalidVariableName = "none",
+								},
+							},
+						},
+					},
+					on_attach = function(client)
+						client.server_capabilities.documentFormattingProvider = false
+						client.server_capabilities.documentRangeFormattingProvider = false
+					end,
+				})
+			end,
 		})
 	end,
 }

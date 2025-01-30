@@ -33,10 +33,11 @@ mkcd() {
 
 setopt extended_glob
 
-alias set_upstream="git push --set-upstream origin main"
+# alias set_upstream="git push --set-upstream origin main"
 
 add_origin_remote () {
     git remote add origin "$1"
+    git push --set-upstream origin main
 }
 
 watch() {
@@ -56,3 +57,7 @@ watch() {
         ls "$file" | entr sh -c 'echo "'"$delimiter"'"; echo "Reloaded at: $(date "+%B %d, %Y at %I:%M %p")"; echo "'"$delimiter"'"; '"$*"
     fi
 }
+
+alias aos="py main.py < input.txt"
+alias aot="py main.py < test.txt"
+alias aoc="aot; echo; aos"

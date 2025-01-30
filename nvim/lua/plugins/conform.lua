@@ -19,7 +19,7 @@ return {
 				graphql = { "prettier" },
 				liquid = { "prettier" },
 				lua = { "stylua" },
-				python = { "ruff_format" },
+				-- python = { "ruff_format" },
 				cpp = { "clang_format" },
 				hpp = { "clang_format" },
 				c = { "clang_format" },
