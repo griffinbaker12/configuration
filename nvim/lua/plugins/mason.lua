@@ -28,6 +28,7 @@ return {
 				"lua_ls",
 				"pyright",
 				"clangd",
+				"prismals",
 			},
 		})
 		mason_tool_installer.setup({

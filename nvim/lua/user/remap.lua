@@ -60,6 +60,12 @@ vim.keymap.set(
 
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
+vim.keymap.set(
+	"n",
+	"<leader>ya",
+	"mngg:%y+<CR>`n",
+	{ desc = "Yank entire file to system clipboard (preserving cursor)" }
+)
 
 vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "Highlight when yanking (copying) text",

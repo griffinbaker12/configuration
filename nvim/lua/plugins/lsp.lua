@@ -1,8 +1,10 @@
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "c", "cpp" },
+	pattern = { "c", "cpp", "javascript", "typescript", "prisma" },
 	callback = function()
+		vim.bo.tabstop = 2
 		vim.bo.shiftwidth = 2
 		vim.bo.softtabstop = 2
+		vim.bo.expandtab = true
 	end,
 })
 
@@ -153,6 +155,40 @@ return {
 					on_attach = function(client)
 						client.server_capabilities.documentFormattingProvider = false
 						client.server_capabilities.documentRangeFormattingProvider = false
+					end,
+				})
+			end,
+			["prismals"] = function()
+				lspconfig["prismals"].setup({
+					capabilities = capabilities,
+					-- This helps the LSP find your project root directory
+					root_dir = function(fname)
+						return lspconfig.util.root_pattern(".git", "package.json", "prisma/schema.prisma")(fname)
+							or lspconfig.util.path.dirname(fname)
+					end,
+					settings = {
+						prisma = {
+							-- Enable formatting support
+							formatSchema = true,
+							-- Add hints and suggestions
+							trace = { server = "messages" },
+						},
+					},
+					-- This ensures proper file type recognition
+					filetypes = { "prisma" },
+
+					-- This sets up formatting and additional features
+					on_attach = function(client, bufnr)
+						-- Enable formatting
+						client.server_capabilities.documentFormattingProvider = true
+
+						-- Set up format on save for Prisma files
+						vim.api.nvim_create_autocmd("BufWritePre", {
+							pattern = "*.prisma",
+							callback = function()
+								vim.lsp.buf.format({ async = false })
+							end,
+						})
 					end,
 				})
 			end,

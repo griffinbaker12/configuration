@@ -61,3 +61,21 @@ watch() {
 alias aos="py main.py < input.txt"
 alias aot="py main.py < test.txt"
 alias aoc="aot; echo; aos"
+export PATH="/opt/homebrew/opt/node@20/bin:$PATH"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/griffinbaker/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/griffinbaker/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/griffinbaker/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/griffinbaker/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
+# pnpm
+export PNPM_HOME="/Users/griffinbaker/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# Created by `pipx` on 2025-01-31 02:56:13
+export PATH="$PATH:/Users/griffinbaker/.local/bin"
