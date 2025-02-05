@@ -74,8 +74,3 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		vim.highlight.on_yank()
 	end,
 })
-
-vim.keymap.set("n", "<M-h>", "<C-w>h", { desc = "Move to left split" })
-vim.keymap.set("n", "<M-j>", "<C-w>j", { desc = "Move to below split" })
-vim.keymap.set("n", "<M-k>", "<C-w>k", { desc = "Move to above split" })
-vim.keymap.set("n", "<M-l>", "<C-w>l", { desc = "Move to right split" })

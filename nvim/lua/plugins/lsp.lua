@@ -149,6 +149,7 @@ return {
 									reportUnboundVariable = "none",
 									reportInvalidVariableName = "none",
 								},
+								extraPaths = { vim.fn.getcwd() },
 							},
 						},
 					},

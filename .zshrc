@@ -16,6 +16,7 @@ export CLICOLOR=1
 export EDITOR='vim'
 bindkey -e
 alias ggp="git push"
+alias gs="git status"
 alias venv='[ ! -d "venv" ] && py -m venv venv;source venv/bin/activate'
 alias ods='v ~/dotfiles'
 bindkey "^D" delete-char-or-list
@@ -77,5 +78,20 @@ case ":$PATH:" in
 esac
 # pnpm end
 
-# Created by `pipx` on 2025-01-31 02:56:13
-export PATH="$PATH:/Users/griffinbaker/.local/bin"
+pythonpath() {
+    local current_dir=$(pwd)
+    
+    # If PYTHONPATH isn't set, initialize it with current dir
+    if [ -z "${PYTHONPATH}" ]; then
+        export PYTHONPATH="${current_dir}"
+        return
+    fi
+    
+    # Check if directory is already in PYTHONPATH
+    echo "${PYTHONPATH}" | grep -q "${current_dir}:"
+    if [ $? -ne 0 ]; then
+        export PYTHONPATH="${current_dir}:${PYTHONPATH}"
+    fi
+}
+
+alias dbpush='dotenv -e .env.local -- npx prisma db push'
