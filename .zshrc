@@ -78,6 +78,7 @@ case ":$PATH:" in
 esac
 # pnpm end
 
+# INTRINSIC
 pythonpath() {
     local current_dir=$(pwd)
     
@@ -95,3 +96,7 @@ pythonpath() {
 }
 
 alias dbpush='dotenv -e .env.local -- npx prisma db push'
+
+alias pascal='cd ~/intrinsic/decoy/src/python/pascal && poetry install'
+alias hopper='cd ~/intrinsic/decoy/src/python/hopper && poetry install'
+alias dashboard='cd ~/intrinsic/decoy/prod-dashboard'

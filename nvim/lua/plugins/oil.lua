@@ -25,5 +25,22 @@ return {
 			},
 		})
 		vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+		vim.api.nvim_create_autocmd("VimEnter", {
+			callback = function()
+				local dir = vim.fn.argv()[1]
+				if dir then
+					dir = dir:gsub("^oil://", "")
+					if vim.fn.isdirectory(dir) == 1 then
+						-- Set the working directory first
+						vim.cmd.cd(dir)
+						-- Open Oil in the exact directory we cd'd to
+						vim.schedule(function()
+							require("oil").open(dir) -- Use oil.open() instead of vim.cmd("Oil")
+							print("Current directory: " .. vim.fn.getcwd())
+						end)
+					end
+				end
+			end,
+		})
 	end,
 }

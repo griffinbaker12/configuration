@@ -1,5 +1,5 @@
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "c", "cpp", "javascript", "typescript", "prisma" },
+	pattern = { "c", "cpp", "javascript", "typescript", "prisma", "typescriptreact", "javascriptreact", "proto" },
 	callback = function()
 		vim.bo.tabstop = 2
 		vim.bo.shiftwidth = 2
@@ -142,6 +142,17 @@ return {
 			["pyright"] = function()
 				lspconfig["pyright"].setup({
 					capabilities = capabilities,
+					on_init = function(client)
+						local workspace = client.config.root_dir
+						local poetry_lock_path = vim.fs.joinpath(workspace, "poetry.lock")
+						if vim.fn.filereadable(poetry_lock_path) == 1 then
+							local venv = vim.fn.trim(vim.fn.system("poetry env info -p"))
+							local python_path = vim.fs.joinpath(venv, "bin", "python")
+							client.config.settings = client.config.settings or {}
+							client.config.settings.python = client.config.settings.python or {}
+							client.config.settings.python.pythonPath = python_path
+						end
+					end,
 					settings = {
 						python = {
 							analysis = {

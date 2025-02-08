@@ -45,6 +45,8 @@ vim.keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) 
 vim.keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" })
 vim.keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" })
 
+vim.keymap.set("n", "<leader>da", "mngg:%d<CR>`n", { desc = "Delete entire file contents (preserving cursor)" })
+
 vim.keymap.set("c", "<Down>", "<C-n>", { noremap = true, silent = true })
 vim.keymap.set("c", "<Up>", "<C-p>", { noremap = true, silent = true })
 

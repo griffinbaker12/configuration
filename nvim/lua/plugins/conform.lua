@@ -24,6 +24,7 @@ return {
 				c = { "clang_format" },
 				h = { "clang_format" },
 				toml = { "taplo" },
+				proto = { "buf_ls" },
 			},
 			formatters = {
 				clang_format = {

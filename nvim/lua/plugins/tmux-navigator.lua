@@ -9,11 +9,10 @@ return {
 		vim.g.tmux_navigator_save_on_switch = 2
 
 		local opts = { noremap = true, silent = true }
-
-		vim.keymap.set("n", "<M-h>", ":<C-U>TmuxNavigateLeft<CR>", opts)
-		vim.keymap.set("n", "<M-j>", ":<C-U>TmuxNavigateDown<CR>", opts)
-		vim.keymap.set("n", "<M-k>", ":<C-U>TmuxNavigateUp<CR>", opts)
-		vim.keymap.set("n", "<M-l>", ":<C-U>TmuxNavigateRight<CR>", opts)
-		vim.keymap.set("n", "<M-w>\\", ":<C-U>TmuxNavigatePrevious<CR>", opts)
+		vim.keymap.set("n", "<M-h>", "<cmd>TmuxNavigateLeft<CR>", opts)
+		vim.keymap.set("n", "<M-j>", "<cmd>TmuxNavigateDown<CR>", opts)
+		vim.keymap.set("n", "<M-k>", "<cmd>TmuxNavigateUp<CR>", opts)
+		vim.keymap.set("n", "<M-l>", "<cmd>TmuxNavigateRight<CR>", opts)
+		vim.keymap.set("n", "<M-\\>", "<cmd>TmuxNavigatePrevious<CR>", opts)
 	end,
 }
