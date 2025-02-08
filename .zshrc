@@ -26,6 +26,7 @@ alias sz="source ~/.zshrc"
 alias st="tmux source-file ~/.tmux.conf"
 
 alias v="nvim"
+alias pv="poetry run nvim ."
 
 # Function to create a directory and cd into it
 mkcd() {
@@ -97,6 +98,6 @@ pythonpath() {
 
 alias dbpush='dotenv -e .env.local -- npx prisma db push'
 
-alias pascal='cd ~/intrinsic/decoy/src/python/pascal && poetry install'
-alias hopper='cd ~/intrinsic/decoy/src/python/hopper && poetry install'
+alias pascal='cd ~/intrinsic/decoy/src/python/pascal && poetry run poetry install'
+alias hopper='cd ~/intrinsic/decoy/src/python/hopper && poetry run poetry install'
 alias dashboard='cd ~/intrinsic/decoy/prod-dashboard'
