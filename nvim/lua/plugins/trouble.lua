@@ -4,7 +4,10 @@ return {
 		"dev-icons",
 	},
 	opts = {
+		mode = "workspace_diagnostics",
 		focus = true,
+		severity = vim.diagnostic.severity.WARN,
+		use_diagnostic_signs = true,
 	},
 	keys = {
 		{ "<leader>xo", "<cmd>Trouble diagnostics toggle<CR>", desc = "Open trouble workspace diagnostics" },
@@ -13,14 +16,12 @@ return {
 		{
 			"]x",
 			function()
-				---@diagnostic disable-next-line: missing-fields, missing-parameter
 				require("trouble").next({ skip_groups = true, jump = true })
 			end,
 		},
 		{
 			"[x",
 			function()
-				---@diagnostic disable-next-line: missing-fields, missing-parameter
 				require("trouble").prev({ skip_groups = true, jump = true })
 			end,
 		},

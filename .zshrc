@@ -6,7 +6,8 @@ eval "$(pyenv init -)"
 # Use 'py' as an alias for the pyenv-managed Python
 alias py="python"
 
-PROMPT='%F{cyan}%~%f${vcs_info_msg_0_} '
+# More detailed prompt with nerd font icons
+PROMPT='%F{cyan}%~%f${vcs_info_msg_0_} %F{yellow}❯%f '
 autoload -Uz vcs_info
 precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '%F{green}[%b]%f'
@@ -98,6 +99,8 @@ pythonpath() {
 
 alias dbpush='dotenv -e .env.local -- npx prisma db push'
 
-alias pascal='cd ~/intrinsic/decoy/src/python/pascal && poetry run poetry install'
-alias hopper='cd ~/intrinsic/decoy/src/python/hopper && poetry run poetry install'
+alias pascal='cd ~/intrinsic/decoy/src/python/pascal && export PYTHONPATH="${PYTHONPATH:+${PYTHONPATH}:}~/intrinsic/decoy/src/python" && poetry run poetry install'
+alias hopper='cd ~/intrinsic/decoy/src/python/hopper && export PYTHONPATH="${PYTHONPATH:+${PYTHONPATH}:}~/intrinsic/decoy/src/python" && poetry run poetry install'
 alias dashboard='cd ~/intrinsic/decoy/prod-dashboard'
+
+export PATH=$PATH:$HOME/go/bin

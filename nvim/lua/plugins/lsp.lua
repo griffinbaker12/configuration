@@ -58,15 +58,12 @@ return {
 
 				opts.desc = "Go to previous diagnostic"
 				keymap.set("n", "[d", vim.diagnostic.goto_prev, opts) -- jump to previous diagnostic in buffer
-				--
+
 				opts.desc = "Go to next diagnostic"
 				keymap.set("n", "]d", vim.diagnostic.goto_next, opts) -- jump to next diagnostic in buffer
 
 				opts.desc = "Show documentation for what is under cursor"
 				keymap.set("n", "K", vim.lsp.buf.hover, opts) -- show documentation for what is under cursor
-
-				opts.desc = "Restart LSP"
-				keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
 
 				opts.desc = "Signature help"
 				keymap.set("i", "<M-i>", function()
@@ -88,7 +85,7 @@ return {
 
 		local min_severity = {
 			severity = {
-				min = vim.diagnostic.severity.WARN, -- Only show warnings and errors
+				min = vim.diagnostic.severity.WARN,
 			},
 		}
 
@@ -144,13 +141,15 @@ return {
 					capabilities = capabilities,
 					on_init = function(client)
 						local workspace = client.config.root_dir
-						local poetry_lock_path = vim.fs.joinpath(workspace, "poetry.lock")
-						if vim.fn.filereadable(poetry_lock_path) == 1 then
-							local venv = vim.fn.trim(vim.fn.system("poetry env info -p"))
-							local python_path = vim.fs.joinpath(venv, "bin", "python")
-							client.config.settings = client.config.settings or {}
-							client.config.settings.python = client.config.settings.python or {}
-							client.config.settings.python.pythonPath = python_path
+						if workspace then
+							local poetry_lock_path = vim.fs.joinpath(workspace, "poetry.lock")
+							if vim.fn.filereadable(poetry_lock_path) == 1 then
+								local venv = vim.fn.trim(vim.fn.system("poetry env info -p"))
+								local python_path = vim.fs.joinpath(venv, "bin", "python")
+								client.config.settings = client.config.settings or {}
+								client.config.settings.python = client.config.settings.python or {}
+								client.config.settings.python.pythonPath = python_path
+							end
 						end
 					end,
 					settings = {
@@ -176,7 +175,7 @@ return {
 					-- This helps the LSP find your project root directory
 					root_dir = function(fname)
 						return lspconfig.util.root_pattern(".git", "package.json", "prisma/schema.prisma")(fname)
-							or lspconfig.util.path.dirname(fname)
+							or vim.fs.dirname(fname)
 					end,
 					settings = {
 						prisma = {

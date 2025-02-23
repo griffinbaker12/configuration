@@ -22,6 +22,37 @@ return {
 
 		local builtin = require("telescope.builtin")
 		vim.keymap.set("n", "<leader>pf", builtin.find_files, {})
+
+		local exclude_dirs = {
+			"node_modules", -- JavaScript dependencies
+			".next", -- Next.js build directory
+			"__pycache__", -- Python cache files
+			".git", -- Git repository data
+			"build", -- Common build output directory
+			"dist", -- Common distribution directory
+			".venv", -- Python virtual environment
+			"venv", -- Another common virtual env name
+			".pytest_cache", -- pytest cache directory
+			".mypy_cache", -- mypy cache directory
+		}
+
+		local find_command = { "rg", "--files", "--hidden", "--no-ignore", "--glob", ".env*" }
+		for _, dir in ipairs(exclude_dirs) do
+			table.insert(find_command, "--glob")
+			table.insert(find_command, "!" .. dir .. "/*")
+		end
+
+		table.insert(find_command, "--glob")
+		table.insert(find_command, "!.DS_Store")
+
+		vim.keymap.set("n", "<leader>pe", function()
+			require("telescope.builtin").find_files({
+				find_command = find_command,
+				prompt_title = "Find .env Files",
+			})
+		end, { desc = "Find .env* files" })
+
+		vim.keymap.set("n", "<leader>gf", builtin.git_files, {})
 		vim.keymap.set("n", "<leader>ps", function()
 			builtin.grep_string({ search = vim.fn.input("Grep > ") })
 		end)
