@@ -11,7 +11,7 @@ vim.keymap.set({ "n", "x", "o" }, "L", "g_") -- Jump to last non-blank character
 -- Search and replace
 vim.keymap.set("n", "n", "nzzzv") -- Keep search results centered
 vim.keymap.set("n", "N", "Nzzzv")
-vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { noremap = true, silent = true }) -- Clear search highlighting
+vim.keymap.set("n", "<leader>cs", ":nohlsearch<CR>", { noremap = true, silent = true }) -- Clear search highlighting
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]]) -- Search and replace word under cursor
 
 -- Moving lines and centering

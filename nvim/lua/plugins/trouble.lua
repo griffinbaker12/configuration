@@ -6,7 +6,6 @@ return {
 	opts = {
 		mode = "workspace_diagnostics",
 		focus = true,
-		severity = vim.diagnostic.severity.WARN,
 		use_diagnostic_signs = true,
 	},
 	keys = {

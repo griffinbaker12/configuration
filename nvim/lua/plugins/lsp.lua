@@ -1,3 +1,4 @@
+-- Enforce 2 spaces for indentation in certain filetypes
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "c", "cpp", "javascript", "typescript", "prisma", "typescriptreact", "javascriptreact", "proto" },
 	callback = function()
@@ -20,98 +21,100 @@ return {
 		local lspconfig = require("lspconfig")
 		local mason_lspconfig = require("mason-lspconfig")
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
-		local keymap = vim.keymap -- for conciseness
+
+		-- 1. Keep a reference to the original diagnostics handler
+		local orig_handler = vim.lsp.handlers["textDocument/publishDiagnostics"]
+
+		-- 2. Override the default handler to filter out everything below WARN
+		vim.lsp.handlers["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+			if result and result.diagnostics then
+				local filtered = {}
+				for _, diag in ipairs(result.diagnostics) do
+					-- Only keep diagnostics that are WARN or ERROR (i.e. severity <= WARN)
+					if diag.severity and diag.severity <= vim.diagnostic.severity.WARN then
+						table.insert(filtered, diag)
+					end
+				end
+				result.diagnostics = filtered
+			end
+			orig_handler(err, result, ctx, config)
+		end
+
+		-- Create an autocmd to set up buffer-local keymaps whenever an LSP attaches
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 			callback = function(ev)
 				-- Buffer local mappings.
 				-- See `:help vim.lsp.*` for documentation on any of the below functions
 				local opts = { buffer = ev.buf, silent = true }
+				local keymap = vim.keymap
 
-				-- set keybinds
 				opts.desc = "Show LSP references"
-				keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
+				keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
 
 				opts.desc = "Go to declaration"
-				keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
+				keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
 
 				opts.desc = "Show LSP definitions"
-				keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
+				keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
 
 				opts.desc = "Show LSP implementations"
-				keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
+				keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
 
 				opts.desc = "Show LSP type definitions"
-				keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
+				keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
 
 				opts.desc = "See available code actions"
-				keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts) -- see available code actions, in visual mode will apply to selection
+				keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 
 				opts.desc = "Smart rename"
-				keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
+				keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 
 				opts.desc = "Show buffer diagnostics"
-				keymap.set("n", "<leader>bd", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
+				keymap.set("n", "<leader>bd", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
 
 				opts.desc = "Show line diagnostics"
-				keymap.set("n", "<leader>ld", vim.diagnostic.open_float, opts) -- show diagnostics for line
+				keymap.set("n", "<leader>ld", vim.diagnostic.open_float, opts)
 
 				opts.desc = "Go to previous diagnostic"
-				keymap.set("n", "[d", vim.diagnostic.goto_prev, opts) -- jump to previous diagnostic in buffer
+				keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
 
 				opts.desc = "Go to next diagnostic"
-				keymap.set("n", "]d", vim.diagnostic.goto_next, opts) -- jump to next diagnostic in buffer
+				keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 
 				opts.desc = "Show documentation for what is under cursor"
-				keymap.set("n", "K", vim.lsp.buf.hover, opts) -- show documentation for what is under cursor
+				keymap.set("n", "K", vim.lsp.buf.hover, opts)
 
 				opts.desc = "Signature help"
 				keymap.set("i", "<M-i>", function()
 					vim.lsp.buf.signature_help()
-				end, opts) -- get help when passing args to a function
+				end, opts)
 			end,
 		})
 
-		-- used to enable autocompletion (assign to every lsp server config)
+		-- Enable autocompletion
 		local capabilities = cmp_nvim_lsp.default_capabilities()
 
-		-- Change the Diagnostic symbols in the sign column (gutter)
-		-- (not in youtube nvim video)
-		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+		-- Customize diagnostic symbols in the sign column (I only want to see these diagnostics)
+		local signs = { Error = " ", Warn = " " }
 		for type, icon in pairs(signs) do
 			local hl = "DiagnosticSign" .. type
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
-		local min_severity = {
-			severity = {
-				min = vim.diagnostic.severity.WARN,
-			},
-		}
-
-		vim.diagnostic.config({
-			-- Only show errors and warnings
-			severity_sort = true,
-			underline = true,
-			signs = min_severity,
-			virtual_text = min_severity,
-			float = min_severity,
-		})
-
+		-- Setup LSP servers via Mason
 		mason_lspconfig.setup_handlers({
-			-- default handler for installed servers
+			-- Default handler
 			function(server_name)
 				lspconfig[server_name].setup({
 					capabilities = capabilities,
 				})
 			end,
 			["lua_ls"] = function()
-				-- configure lua server (with special settings)
 				lspconfig["lua_ls"].setup({
 					capabilities = capabilities,
 					settings = {
 						Lua = {
-							-- make the language server recognize "vim" global
 							diagnostics = {
 								globals = { "vim" },
 							},
@@ -172,28 +175,19 @@ return {
 			["prismals"] = function()
 				lspconfig["prismals"].setup({
 					capabilities = capabilities,
-					-- This helps the LSP find your project root directory
 					root_dir = function(fname)
 						return lspconfig.util.root_pattern(".git", "package.json", "prisma/schema.prisma")(fname)
 							or vim.fs.dirname(fname)
 					end,
 					settings = {
 						prisma = {
-							-- Enable formatting support
 							formatSchema = true,
-							-- Add hints and suggestions
 							trace = { server = "messages" },
 						},
 					},
-					-- This ensures proper file type recognition
 					filetypes = { "prisma" },
-
-					-- This sets up formatting and additional features
 					on_attach = function(client, bufnr)
-						-- Enable formatting
 						client.server_capabilities.documentFormattingProvider = true
-
-						-- Set up format on save for Prisma files
 						vim.api.nvim_create_autocmd("BufWritePre", {
 							pattern = "*.prisma",
 							callback = function()
