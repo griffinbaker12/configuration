@@ -9,6 +9,7 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 	},
+	"nvim-treesitter/nvim-treesitter-textobjects",
 	"tpope/vim-fugitive",
 	"eandrju/cellular-automaton.nvim",
 	"itchyny/vim-qfedit",
@@ -22,7 +23,26 @@ return {
 			--  - va)  - [V]isually select [A]round [)]paren
 			--  - yinq - [Y]ank [I]nside [N]ext [']quote
 			--  - ci'  - [C]hange [I]nside [']quote
-			require("mini.ai").setup({ n_lines = 500 })
+			local spec_treesitter = require("mini.ai").gen_spec.treesitter
+			require("mini.ai").setup({
+				custom_textobjects = {
+					F = spec_treesitter({ a = "@function.outer", i = "@function.inner" }),
+					L = spec_treesitter({
+						a = { "@conditional.outer", "@loop.outer" },
+						i = { "@conditional.inner", "@loop.inner" },
+					}),
+				},
+			})
+
+			local f = function(aa, bb)
+				return function()
+					return [[string]]
+				end
+			end
+
+			-- Ehanced: [ { ( "aa" "bb" 'cc' ) } ]
+			-- New ones: f(aa, g(bb, cc))
+			-- (aa) (bb) (cc)
 
 			-- Add/delete/replace surroundings (brackets, quotes, etc.)
 			--
