@@ -9,11 +9,11 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 	},
-	"kylechui/nvim-surround",
 	"nvim-treesitter/nvim-treesitter-textobjects",
 	"tpope/vim-fugitive",
 	"eandrju/cellular-automaton.nvim",
 	"itchyny/vim-qfedit",
+	"kylechui/nvim-surround",
 	"fladson/vim-kitty",
 	{
 		"echasnovski/mini.nvim",
