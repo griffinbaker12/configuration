@@ -92,9 +92,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- Diagnostic viewing
-vim.keymap.set("n", "<leader>dd", "<cmd>lua vim.diagnostic.open_float()<CR>")
-
 -- So that I move around the same way as I do in the cli
 vim.keymap.set("c", "<A-b>", "<C-Left>", { noremap = true })
 vim.keymap.set("c", "<A-f>", "<C-Right>", { noremap = true })

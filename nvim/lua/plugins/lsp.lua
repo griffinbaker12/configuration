@@ -9,11 +9,19 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+	pattern = { "*.yaml.tpl", "*.yml.tpl", "*/templates/*.yaml", "*/templates/*.yml" },
+	callback = function()
+		vim.bo.filetype = "helm"
+	end,
+})
+
 return {
 	"neovim/nvim-lspconfig",
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
 		"hrsh7th/cmp-nvim-lsp",
+		{ "b0o/schemastore.nvim" },
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 		{ "folke/neodev.nvim", opts = {} },
 	},
@@ -75,6 +83,12 @@ return {
 
 				opts.desc = "Show line diagnostics"
 				keymap.set("n", "<leader>ld", vim.diagnostic.open_float, opts)
+
+				opts.desc = "Enter line diagnostics window"
+				keymap.set("n", "<leader>dd", function()
+					vim.diagnostic.open_float()
+					vim.diagnostic.open_float()
+				end, opts)
 
 				opts.desc = "Go to previous diagnostic"
 				keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
@@ -195,6 +209,41 @@ return {
 							end,
 						})
 					end,
+				})
+			end,
+			["yamlls"] = function()
+				lspconfig["yamlls"].setup({
+					capabilities = capabilities,
+					on_attach = function(client, bufnr)
+						-- Disable diagnostics for Helm files
+						if vim.bo[bufnr].buftype ~= "" or vim.bo[bufnr].filetype == "helm" then
+							vim.diagnostic.enable(false, bufnr)
+							vim.defer_fn(function()
+								vim.diagnostic.reset(nil, bufnr)
+							end, 1000)
+						end
+					end,
+					settings = {
+						yaml = {
+							schemas = require("schemastore").yaml.schemas(),
+							schemaStore = {
+								enable = false,
+								url = "",
+							},
+						},
+					},
+				})
+			end,
+			["helm_ls"] = function()
+				lspconfig["helm_ls"].setup({
+					capabilities = capabilities,
+					settings = {
+						["helm-ls"] = {
+							yamlls = {
+								enabled = false,
+							},
+						},
+					},
 				})
 			end,
 		})
