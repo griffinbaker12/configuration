@@ -17,9 +17,9 @@ return {
 		end)
 
 		vim.keymap.set("n", "<leader>gw", function()
-			vim.cmd("Gwrite") -- Write the changes
-			vim.cmd("only") -- Close all other windows
-			vim.cmd("Git") -- Open the fugitive status window
+			vim.cmd("Gwrite")
+			vim.cmd("only")
+			vim.cmd("Git")
 		end)
 
 		local User_Fugitive = vim.api.nvim_create_augroup("UserFigutiveConfig", {})
@@ -48,11 +48,9 @@ return {
 			end,
 		})
 
-		-- Diff view navigation
 		vim.keymap.set("n", "gu", "<cmd>diffget //2<CR>")
 		vim.keymap.set("n", "gh", "<cmd>diffget //3<CR>")
 
-		-- Toggle between diff view and single file view
 		vim.keymap.set("n", "<leader>dt", function()
 			if vim.o.diff then
 				vim.cmd("only")
