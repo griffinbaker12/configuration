@@ -9,6 +9,7 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 	},
+	"kylechui/nvim-surround",
 	"nvim-treesitter/nvim-treesitter-textobjects",
 	"tpope/vim-fugitive",
 	"eandrju/cellular-automaton.nvim",
@@ -17,8 +18,7 @@ return {
 	{
 		"echasnovski/mini.nvim",
 		config = function()
-			-- Better Around/Inside textobjects
-			--
+			-- Better Around/Inside textobjects (and define your own)
 			-- Examples:
 			--  - va)  - [V]isually select [A]round [)]paren
 			--  - yinq - [Y]ank [I]nside [N]ext [']quote
@@ -34,24 +34,12 @@ return {
 				},
 			})
 
-			local f = function(aa, bb)
-				return function()
-					return [[string]]
-				end
-			end
+			-- local f = function(aa, bb)
+			-- 	return function()
+			-- 		return [[string]]
+			-- 	end
+			-- end
 
-			-- Ehanced: [ { ( "aa" "bb" 'cc' ) } ]
-			-- New ones: f(aa, g(bb, cc))
-			-- (aa) (bb) (cc)
-
-			-- Add/delete/replace surroundings (brackets, quotes, etc.)
-			--
-			-- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-			-- - sd'   - [S]urround [D]elete [']quotes
-			-- - sr)'  - [S]urround [R]eplace [)] [']
-			require("mini.surround").setup()
-
-			require("mini.pairs").setup()
 			require("mini.comment").setup({
 				options = {
 					custom_commentstring = function()

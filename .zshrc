@@ -7,7 +7,7 @@ eval "$(pyenv init -)"
 alias py="python"
 
 # More detailed prompt with nerd font icons
-PROMPT=$'%F{cyan}%~%f${vcs_info_msg_0_}\n%F{yellow}❯%f '
+PROMPT=$'%F{cyan}%~%f${vcs_info_msg_0_}%F{yellow} ❯%f '
 autoload -Uz vcs_info
 precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '%F{green}[%b]%f'
@@ -81,7 +81,7 @@ esac
 # pnpm end
 
 # INTRINSIC
-pythonpath() {
+pp() {
     local current_dir=$(pwd)
     
     # If PYTHONPATH isn't set, initialize it with current dir
