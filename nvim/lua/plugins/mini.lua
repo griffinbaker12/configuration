@@ -9,7 +9,10 @@ return {
 		local spec_treesitter = require("mini.ai").gen_spec.treesitter
 		require("mini.ai").setup({
 			custom_textobjects = {
-				F = spec_treesitter({ a = "@function.outer", i = "@function.inner" }),
+				F = spec_treesitter({
+					a = { "@function.outer", "@method.outer", "@arrow_function.outer" },
+					i = { "@function.inner", "@method.inner", "@arrow_function.inner" },
+				}),
 				L = spec_treesitter({
 					a = { "@conditional.outer", "@loop.outer" },
 					i = { "@conditional.inner", "@loop.inner" },
@@ -17,11 +20,11 @@ return {
 			},
 		})
 
-		-- local f = function(aa, bb)
-		-- 	return function()
-		-- 		return [[string]]
-		-- 	end
-		-- end
+		local f = function(aa, bb)
+			return function()
+				return [[string]]
+			end
+		end
 
 		require("mini.comment").setup({
 			options = {

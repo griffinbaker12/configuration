@@ -1,3 +1,15 @@
+local function is_deno_project(bufnr)
+	local fname = vim.api.nvim_buf_get_name(bufnr)
+	local root = vim.fn.fnamemodify(fname, ":p:h")
+	while root and root ~= "" and root ~= "/" do
+		if #vim.fn.globpath(root, "deno.json", false, true) > 0 then
+			return true
+		end
+		root = vim.fn.fnamemodify(root, ":h")
+	end
+	return false
+end
+
 -- Enforce 2 spaces for indentation in certain filetypes
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "c", "cpp", "javascript", "typescript", "prisma", "typescriptreact", "javascriptreact", "proto" },
@@ -244,6 +256,44 @@ return {
 							},
 						},
 					},
+				})
+			end,
+			["eslint"] = function()
+				lspconfig["eslint"].setup({
+					capabilities = capabilities,
+					settings = {
+						packageManager = "pnpm",
+					},
+					filetypes = {
+						"javascript",
+						"javascriptreact",
+						"typescript",
+						"typescriptreact",
+					},
+					on_attach = function(client, bufnr)
+						vim.api.nvim_create_autocmd("BufWritePre", {
+							buffer = bufnr,
+							command = "EslintFixAll",
+						})
+					end,
+				})
+			end,
+			["denols"] = function()
+				lspconfig["denols"].setup({
+					capabilities = capabilities,
+					root_dir = lspconfig.util.root_pattern("deno.json"),
+					init_options = {
+						enable = true,
+						lint = true,
+						unstable = true,
+					},
+				})
+			end,
+			["ts_ls"] = function()
+				lspconfig["ts_ls"].setup({
+					capabilities = capabilities,
+					root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json"),
+					single_file_support = false,
 				})
 			end,
 		})

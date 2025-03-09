@@ -16,8 +16,10 @@ setopt autocd
 export CLICOLOR=1
 export EDITOR='vim'
 bindkey -e
-alias ggp="git push"
+alias gp="git push"
 alias gs="git status"
+alias gP="git pull"
+alias gc="git checkout"
 alias venv='[ ! -d "venv" ] && py -m venv venv;source venv/bin/activate'
 alias ods='v ~/dotfiles'
 bindkey "^D" delete-char-or-list
@@ -36,11 +38,9 @@ mkcd() {
 
 setopt extended_glob
 
-# alias set_upstream="git push --set-upstream origin main"
-
-add_origin_remote () {
+gt () {
     git remote add origin "$1"
-    git push --set-upstream origin main
+    git push --set-upstream origin "$(git rev-parse --abbrev-ref HEAD)"
 }
 
 watch() {
@@ -104,3 +104,4 @@ alias hopper='cd ~/intrinsic/decoy/src/python/hopper && export PYTHONPATH="${PYT
 alias dashboard='cd ~/intrinsic/decoy/prod-dashboard'
 
 export PATH=$PATH:$HOME/go/bin
+. "/Users/griffinbaker/.deno/env"

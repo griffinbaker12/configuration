@@ -13,14 +13,28 @@ return {
 	},
 	config = function()
 		local cmp = require("cmp")
-		local luasnip = require("luasnip")
 		local lspkind = require("lspkind")
 
+		local luasnip = require("luasnip")
+		local i = luasnip.insert_node
+		local s = luasnip.snippet
+		local t = luasnip.text_node
+
 		luasnip.add_snippets("python", {
-			luasnip.snippet("ti", {
-				luasnip.text_node("# type: ignore"),
+			s("ti", {
+				t("# type: ignore"),
 			}),
 		})
+
+		local console_log_snippet = s("lg", {
+			t("console.log("),
+			i(1, ""),
+			t(");"),
+		})
+		local js_langs = { "javascript", "typescript", "javascriptreact", "typescriptreact" }
+		for _, lang in ipairs(js_langs) do
+			luasnip.add_snippets(lang, { console_log_snippet })
+		end
 
 		cmp.setup({
 			snippet = {
