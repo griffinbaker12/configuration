@@ -61,9 +61,9 @@ return {
 		end, { desc = "Find .env* files" })
 
 		vim.keymap.set("n", "<leader>gf", builtin.git_files, {})
-		vim.keymap.set("n", "<leader>ps", function()
-			builtin.grep_string({ search = vim.fn.input("Grep > ") })
-		end)
+		-- vim.keymap.set("n", "<leader>ps", function()
+		-- 	builtin.grep_string({ search = vim.fn.input("Grep > ") })
+		-- end)
 		vim.keymap.set("n", "<leader>pb", builtin.buffers, { desc = "List open buffers" })
 		vim.keymap.set("n", "<leader>vh", builtin.help_tags, { desc = "List vim help tags" })
 		vim.keymap.set("n", "<leader>ls", "<cmd>Telescope live_grep<cr>")
@@ -74,6 +74,6 @@ return {
 		vim.keymap.set("n", "[q", "<cmd>cprevious<cr>", { desc = "Previous quickfix item" })
 		vim.keymap.set("n", "]q", "<cmd>cnext<cr>", { desc = "Next quickfix item" })
 
-		require("config.telescope")
+		require("user.telescope").setup()
 	end,
 }

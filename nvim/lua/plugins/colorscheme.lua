@@ -8,7 +8,7 @@ return {
 			vim.g.gruvbox_material_better_performance = 1
 			vim.g.gruvbox_material_disable_italic_comment = 1
 			vim.g.gruvbox_material_enable_italic = 0
-			vim sourced.cmd.colorscheme("gruvbox-material")
+			vim.cmd.colorscheme("gruvbox-material")
 		end,
 	},
 }

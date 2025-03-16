@@ -6,6 +6,8 @@ eval "$(pyenv init -)"
 # Use 'py' as an alias for the pyenv-managed Python
 alias py="python"
 
+alias tsc="~/typescript-go/built/local/tsgo tsc"
+
 # More detailed prompt with nerd font icons
 PROMPT=$'%F{cyan}%~%f${vcs_info_msg_0_}%F{yellow} ❯%f '
 autoload -Uz vcs_info
