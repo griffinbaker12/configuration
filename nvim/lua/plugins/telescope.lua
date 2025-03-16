@@ -3,6 +3,10 @@ return {
 	dependencies = {
 		"plenary",
 		"dev-icons",
+		{
+			"nvim-telescope/telescope-fzf-native.nvim",
+			build = "make",
+		},
 	},
 	config = function()
 		local telescope = require("telescope")
@@ -18,7 +22,11 @@ return {
 					},
 				},
 			},
+			extensions = {
+				fzf = {},
+			},
 		})
+		telescope.load_extension("fzf")
 
 		local builtin = require("telescope.builtin")
 		vim.keymap.set("n", "<leader>pf", builtin.find_files, {})
@@ -65,5 +73,7 @@ return {
 		vim.keymap.set("n", "<leader>qc", "<cmd>cclose<cr>", { desc = "Close quickfix list" })
 		vim.keymap.set("n", "[q", "<cmd>cprevious<cr>", { desc = "Previous quickfix item" })
 		vim.keymap.set("n", "]q", "<cmd>cnext<cr>", { desc = "Next quickfix item" })
+
+		require("config.telescope")
 	end,
 }

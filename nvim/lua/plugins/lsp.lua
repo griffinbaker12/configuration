@@ -94,10 +94,7 @@ return {
 				keymap.set("n", "<leader>bd", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
 
 				opts.desc = "Show line diagnostics"
-				keymap.set("n", "<leader>ld", vim.diagnostic.open_float, opts)
-
-				opts.desc = "Enter line diagnostics window"
-				keymap.set("n", "<leader>dd", function()
+				keymap.set("n", "<leader>ld", function()
 					vim.diagnostic.open_float()
 					vim.diagnostic.open_float()
 				end, opts)
@@ -271,10 +268,8 @@ return {
 						"typescriptreact",
 					},
 					on_attach = function(client, bufnr)
-						vim.api.nvim_create_autocmd("BufWritePre", {
-							buffer = bufnr,
-							command = "EslintFixAll",
-						})
+						client.server_capabilities.documentFormattingProvider = false
+						client.server_capabilities.documentRangeFormattingProvider = false
 					end,
 				})
 			end,
@@ -293,7 +288,27 @@ return {
 				lspconfig["ts_ls"].setup({
 					capabilities = capabilities,
 					root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json"),
-					single_file_support = false,
+					-- single_file_support = false,
+					on_attach = function(client, bufnr)
+						client.server_capabilities.documentFormattingProvider = false
+						client.server_capabilities.documentRangeFormattingProvider = false
+					end,
+					settings = {
+						typescript = {
+							format = {
+								indentSize = 2,
+								convertTabsToSpaces = true,
+								tabSize = 2,
+							},
+						},
+						javascript = {
+							format = {
+								indentSize = 2,
+								convertTabsToSpaces = true,
+								tabSize = 2,
+							},
+						},
+					},
 				})
 			end,
 		})

@@ -31,6 +31,8 @@ alias st="tmux source-file ~/.tmux.conf"
 alias v="nvim"
 alias pv="poetry run nvim ."
 
+alias grab='deno --allow-run --allow-read ~/projects/grab/main.ts'
+
 # Function to create a directory and cd into it
 mkcd() {
     mkdir -p "$1" && cd "$1"
