@@ -7,7 +7,7 @@ return {
 		harpoon:setup()
 
 		-- Add files to list
-		vim.keymap.set("n", "<leader>a", function()
+		vim.keymap.set("n", "<leader>m", function()
 			harpoon:list():add()
 		end, { desc = "Harpoon: Add file" })
 		vim.keymap.set("n", "<leader>A", function()

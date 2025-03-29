@@ -23,10 +23,24 @@ return {
 				},
 			},
 			sections = {
-				lualine_a = {},
-				lualine_b = {
-					"fancy_branch",
+				lualine_a = {
+					{
+						"mode",
+						fmt = function(str)
+							local mode_map = {
+								["NORMAL"] = "N",
+								["INSERT"] = "I",
+								["VISUAL"] = "V",
+								["V-LINE"] = "V",
+								["V-BLOCK"] = "V",
+								["COMMAND"] = "C",
+								["TERMINAL"] = "T",
+							}
+							return mode_map[str]
+						end,
+					},
 				},
+				lualine_b = {},
 				lualine_c = {
 					{
 						"filename",
@@ -45,9 +59,11 @@ return {
 					{ "fancy_searchcount" },
 				},
 				lualine_x = {
-					"fancy_lsp_servers",
+					-- "fancy_lsp_servers",
 				},
-				lualine_y = {},
+				lualine_y = {
+					"fancy_branch",
+				},
 				lualine_z = {},
 			},
 			inactive_sections = {

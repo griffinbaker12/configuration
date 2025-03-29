@@ -32,7 +32,7 @@ return {
 	"neovim/nvim-lspconfig",
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
-		"hrsh7th/cmp-nvim-lsp",
+		"saghen/blink.cmp",
 		{ "b0o/schemastore.nvim" },
 		{ "antosha417/nvim-lsp-file-operations", config = true },
 		{ "folke/neodev.nvim", opts = {} },
@@ -40,7 +40,6 @@ return {
 	config = function()
 		local lspconfig = require("lspconfig")
 		local mason_lspconfig = require("mason-lspconfig")
-		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
 		-- 1. Keep a reference to the original diagnostics handler
 		local orig_handler = vim.lsp.handlers["textDocument/publishDiagnostics"]
@@ -116,7 +115,7 @@ return {
 		})
 
 		-- Enable autocompletion
-		local capabilities = cmp_nvim_lsp.default_capabilities()
+		local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 		-- Customize diagnostic symbols in the sign column (I only want to see these diagnostics)
 		local signs = { Error = " ", Warn = " " }

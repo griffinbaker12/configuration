@@ -2,6 +2,7 @@ vim.g.mapleader = " "
 
 -- Basic mappings
 vim.keymap.set("i", "jk", "<Esc>", { noremap = true }) -- Exit insert mode with jk
+vim.keymap.set("i", "jj", "<Esc>", { noremap = true }) -- Exit insert mode with jj
 vim.keymap.set("n", "Q", "<nop>") -- Disable Ex mode
 
 -- Line navigation: use H/L for start/end of line instead of viewport top/bottom
@@ -95,3 +96,27 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- So that I move around the same way as I do in the cli
 vim.keymap.set("c", "<A-b>", "<C-Left>", { noremap = true })
 vim.keymap.set("c", "<A-f>", "<C-Right>", { noremap = true })
+
+-- Add empty lines above and below cursor without moving
+vim.keymap.set("n", "[<Space>", function()
+	-- Save cursor position
+	local cursor_pos = vim.fn.getcurpos()
+	-- Add line above
+	vim.cmd("normal! O")
+	-- Delete text in the new line (in case autoindent adds something)
+	vim.cmd("normal! 0D")
+	-- Restore cursor position (but now one line down because of inserted line)
+	cursor_pos[2] = cursor_pos[2] + 1
+	vim.fn.setpos(".", cursor_pos)
+end, { desc = "Add empty line above" })
+
+vim.keymap.set("n", "]<Space>", function()
+	-- Save cursor position
+	local cursor_pos = vim.fn.getcurpos()
+	-- Add line below
+	vim.cmd("normal! o")
+	-- Delete text in the new line (in case autoindent adds something)
+	vim.cmd("normal! 0D")
+	-- Restore cursor position
+	vim.fn.setpos(".", cursor_pos)
+end, { desc = "Add empty line below" })
