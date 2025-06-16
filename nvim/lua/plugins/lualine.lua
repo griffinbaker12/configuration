@@ -62,7 +62,10 @@ return {
 					-- "fancy_lsp_servers",
 				},
 				lualine_y = {
-					"fancy_branch",
+					{
+						"fancy_branch",
+						color = { fg = "#FFFFFF" }, -- White
+					},
 				},
 				lualine_z = {},
 			},

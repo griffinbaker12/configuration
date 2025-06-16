@@ -120,3 +120,6 @@ vim.keymap.set("n", "]<Space>", function()
 	-- Restore cursor position
 	vim.fn.setpos(".", cursor_pos)
 end, { desc = "Add empty line below" })
+
+-- vim.keymap.set("n", "<leader>msg", "<cmd>messages<CR>", { desc = "Show system messages" })
+vim.keymap.set("n", "<leader>msg", "<cmd:new | r!dmesg<CR>", { desc = "Show system messages" })

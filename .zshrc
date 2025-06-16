@@ -84,7 +84,9 @@ case ":$PATH:" in
 esac
 # pnpm end
 
+
 # INTRINSIC
+export PYTHONPATH="$HOME/intrinsic/decoy/src/python${PYTHONPATH:+":$PYTHONPATH"}"
 pp() {
     local current_dir=$(pwd)
     
@@ -103,9 +105,18 @@ pp() {
 
 alias dbpush='dotenv -e .env.local -- npx prisma db push'
 
-alias pascal='cd ~/intrinsic/decoy/src/python/pascal && export PYTHONPATH="${PYTHONPATH:+${PYTHONPATH}:}~/intrinsic/decoy/src/python" && poetry run poetry install'
-alias hopper='cd ~/intrinsic/decoy/src/python/hopper && export PYTHONPATH="${PYTHONPATH:+${PYTHONPATH}:}~/intrinsic/decoy/src/python" && poetry run poetry install'
+go_py_project() {
+  local proj="$1"
+  cd "$HOME/intrinsic/decoy/src/python/$proj" || return
+}
+
+alias pascal='go_py_project pascal'
+alias hopper='go_py_project hopper'
+alias common='go_py_project common'
+alias delta='go_py_project delta'
 alias dashboard='cd ~/intrinsic/decoy/prod-dashboard'
+
+alias vv='poetry run nvim .'
 
 export PATH=$PATH:$HOME/go/bin
 . "/Users/griffinbaker/.deno/env"

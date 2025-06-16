@@ -39,7 +39,6 @@ return {
 	},
 	config = function()
 		local lspconfig = require("lspconfig")
-		local mason_lspconfig = require("mason-lspconfig")
 
 		-- 1. Keep a reference to the original diagnostics handler
 		local orig_handler = vim.lsp.handlers["textDocument/publishDiagnostics"]
@@ -64,7 +63,6 @@ return {
 			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 			callback = function(ev)
 				-- Buffer local mappings.
-				-- See `:help vim.lsp.*` for documentation on any of the below functions
 				local opts = { buffer = ev.buf, silent = true }
 				local keymap = vim.keymap
 
@@ -117,199 +115,219 @@ return {
 		-- Enable autocompletion
 		local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-		-- Customize diagnostic symbols in the sign column (I only want to see these diagnostics)
-		local signs = { Error = " ", Warn = " " }
+		-- Customize diagnostic symbols in the sign column
+		local signs = { Error = " ", Warn = " " }
 		for type, icon in pairs(signs) do
 			local hl = "DiagnosticSign" .. type
 			vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 		end
 
-		-- Setup LSP servers via Mason
-		mason_lspconfig.setup_handlers({
-			-- Default handler
-			function(server_name)
-				lspconfig[server_name].setup({
-					capabilities = capabilities,
-				})
-			end,
-			["lua_ls"] = function()
-				lspconfig["lua_ls"].setup({
-					capabilities = capabilities,
-					settings = {
-						Lua = {
-							diagnostics = {
-								globals = { "vim" },
-							},
-							completion = {
-								callSnippet = "Replace",
-							},
-						},
+		-- Setup each LSP server individually using traditional lspconfig approach
+		lspconfig.lua_ls.setup({
+			capabilities = capabilities,
+			settings = {
+				Lua = {
+					diagnostics = {
+						globals = { "vim" },
 					},
-				})
-			end,
-			["clangd"] = function()
-				lspconfig["clangd"].setup({
-					capabilities = capabilities,
-					settings = {
-						clangd = {
-							arguments = {
-								"--header-insertion=never",
-								"--fallback-style=Google",
-								"--clang-tidy",
-							},
-						},
+					completion = {
+						callSnippet = "Replace",
 					},
-				})
+				},
+			},
+		})
+
+		lspconfig.clangd.setup({
+			capabilities = capabilities,
+			settings = {
+				clangd = {
+					arguments = {
+						"--header-insertion=never",
+						"--fallback-style=Google",
+						"--clang-tidy",
+					},
+				},
+			},
+		})
+
+		lspconfig.pyright.setup({
+			capabilities = capabilities,
+			on_init = function(client)
+				local workspace = client.config.root_dir
+				if workspace then
+					local poetry_lock_path = vim.fs.joinpath(workspace, "poetry.lock")
+					if vim.fn.filereadable(poetry_lock_path) == 1 then
+						local venv = vim.fn.trim(vim.fn.system("poetry env info -p"))
+						local python_path = vim.fs.joinpath(venv, "bin", "python")
+						client.config.settings = client.config.settings or {}
+						client.config.settings.python = client.config.settings.python or {}
+						client.config.settings.python.pythonPath = python_path
+					end
+				end
 			end,
-			["pyright"] = function()
-				lspconfig["pyright"].setup({
-					capabilities = capabilities,
-					on_init = function(client)
-						local workspace = client.config.root_dir
-						if workspace then
-							local poetry_lock_path = vim.fs.joinpath(workspace, "poetry.lock")
-							if vim.fn.filereadable(poetry_lock_path) == 1 then
-								local venv = vim.fn.trim(vim.fn.system("poetry env info -p"))
-								local python_path = vim.fs.joinpath(venv, "bin", "python")
-								client.config.settings = client.config.settings or {}
-								client.config.settings.python = client.config.settings.python or {}
-								client.config.settings.python.pythonPath = python_path
-							end
-						end
+			settings = {
+				python = {
+					analysis = {
+						diagnosticSeverityOverrides = {
+							reportUnboundVariable = "none",
+							reportInvalidVariableName = "none",
+						},
+						extraPaths = { vim.fn.getcwd() },
+					},
+				},
+			},
+			on_attach = function(client)
+				client.server_capabilities.documentFormattingProvider = false
+				client.server_capabilities.documentRangeFormattingProvider = false
+			end,
+		})
+
+		lspconfig.prismals.setup({
+			capabilities = capabilities,
+			root_dir = function(fname)
+				return lspconfig.util.root_pattern(".git", "package.json", "prisma/schema.prisma")(fname)
+					or vim.fn.getcwd()
+			end,
+			settings = {
+				prisma = {
+					formatSchema = true,
+					trace = { server = "messages" },
+				},
+			},
+			filetypes = { "prisma" },
+			on_attach = function(client, bufnr)
+				client.server_capabilities.documentFormattingProvider = true
+				vim.api.nvim_create_autocmd("BufWritePre", {
+					pattern = "*.prisma",
+					callback = function()
+						vim.lsp.buf.format({ async = false })
 					end,
-					settings = {
-						python = {
-							analysis = {
-								diagnosticSeverityOverrides = {
-									reportUnboundVariable = "none",
-									reportInvalidVariableName = "none",
-								},
-								extraPaths = { vim.fn.getcwd() },
-							},
-						},
-					},
-					on_attach = function(client)
-						client.server_capabilities.documentFormattingProvider = false
-						client.server_capabilities.documentRangeFormattingProvider = false
-					end,
-				})
-			end,
-			["prismals"] = function()
-				lspconfig["prismals"].setup({
-					capabilities = capabilities,
-					root_dir = function(fname)
-						return lspconfig.util.root_pattern(".git", "package.json", "prisma/schema.prisma")(fname)
-							or vim.fs.dirname(fname)
-					end,
-					settings = {
-						prisma = {
-							formatSchema = true,
-							trace = { server = "messages" },
-						},
-					},
-					filetypes = { "prisma" },
-					on_attach = function(client, bufnr)
-						client.server_capabilities.documentFormattingProvider = true
-						vim.api.nvim_create_autocmd("BufWritePre", {
-							pattern = "*.prisma",
-							callback = function()
-								vim.lsp.buf.format({ async = false })
-							end,
-						})
-					end,
-				})
-			end,
-			["yamlls"] = function()
-				lspconfig["yamlls"].setup({
-					capabilities = capabilities,
-					on_attach = function(client, bufnr)
-						-- Disable diagnostics for Helm files
-						if vim.bo[bufnr].buftype ~= "" or vim.bo[bufnr].filetype == "helm" then
-							vim.diagnostic.enable(false, bufnr)
-							vim.defer_fn(function()
-								vim.diagnostic.reset(nil, bufnr)
-							end, 1000)
-						end
-					end,
-					settings = {
-						yaml = {
-							schemas = require("schemastore").yaml.schemas(),
-							schemaStore = {
-								enable = false,
-								url = "",
-							},
-						},
-					},
-				})
-			end,
-			["helm_ls"] = function()
-				lspconfig["helm_ls"].setup({
-					capabilities = capabilities,
-					settings = {
-						["helm-ls"] = {
-							yamlls = {
-								enabled = false,
-							},
-						},
-					},
-				})
-			end,
-			["eslint"] = function()
-				lspconfig["eslint"].setup({
-					capabilities = capabilities,
-					settings = {
-						packageManager = "pnpm",
-					},
-					filetypes = {
-						"javascript",
-						"javascriptreact",
-						"typescript",
-						"typescriptreact",
-					},
-					on_attach = function(client, bufnr)
-						client.server_capabilities.documentFormattingProvider = false
-						client.server_capabilities.documentRangeFormattingProvider = false
-					end,
-				})
-			end,
-			["denols"] = function()
-				lspconfig["denols"].setup({
-					capabilities = capabilities,
-					root_dir = lspconfig.util.root_pattern("deno.json"),
-					init_options = {
-						enable = true,
-						lint = true,
-						unstable = true,
-					},
-				})
-			end,
-			["ts_ls"] = function()
-				lspconfig["ts_ls"].setup({
-					capabilities = capabilities,
-					root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json"),
-					-- single_file_support = false,
-					on_attach = function(client, bufnr)
-						client.server_capabilities.documentFormattingProvider = false
-						client.server_capabilities.documentRangeFormattingProvider = false
-					end,
-					settings = {
-						typescript = {
-							format = {
-								indentSize = 2,
-								convertTabsToSpaces = true,
-								tabSize = 2,
-							},
-						},
-						javascript = {
-							format = {
-								indentSize = 2,
-								convertTabsToSpaces = true,
-								tabSize = 2,
-							},
-						},
-					},
 				})
 			end,
 		})
+
+		lspconfig.yamlls.setup({
+			capabilities = capabilities,
+			on_attach = function(client, bufnr)
+				-- Disable diagnostics for Helm files
+				if vim.bo[bufnr].buftype ~= "" or vim.bo[bufnr].filetype == "helm" then
+					vim.diagnostic.enable(false, bufnr)
+					vim.defer_fn(function()
+						vim.diagnostic.reset(nil, bufnr)
+					end, 1000)
+				end
+			end,
+			settings = {
+				yaml = {
+					schemas = require("schemastore").yaml.schemas(),
+					schemaStore = {
+						enable = false,
+						url = "",
+					},
+				},
+			},
+		})
+
+		lspconfig.helm_ls.setup({
+			capabilities = capabilities,
+			settings = {
+				["helm-ls"] = {
+					yamlls = {
+						enabled = false,
+					},
+				},
+			},
+		})
+
+		lspconfig.eslint.setup({
+			capabilities = capabilities,
+			settings = {
+				packageManager = "pnpm",
+			},
+			filetypes = {
+				"javascript",
+				"javascriptreact",
+				"typescript",
+				"typescriptreact",
+			},
+			on_attach = function(client, bufnr)
+				client.server_capabilities.documentFormattingProvider = false
+				client.server_capabilities.documentRangeFormattingProvider = false
+			end,
+		})
+
+		lspconfig.denols.setup({
+			capabilities = capabilities,
+			root_dir = lspconfig.util.root_pattern("deno.json"),
+			init_options = {
+				enable = true,
+				lint = true,
+				unstable = true,
+			},
+		})
+
+		lspconfig.ts_ls.setup({
+			capabilities = capabilities,
+			root_dir = function(fname)
+				return lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json")(fname)
+					or vim.fn.getcwd()
+			end,
+			on_attach = function(client, bufnr)
+				client.server_capabilities.documentFormattingProvider = false
+				client.server_capabilities.documentRangeFormattingProvider = false
+			end,
+			single_file_support = true,
+			settings = {
+				typescript = {
+					format = {
+						indentSize = 2,
+						convertTabsToSpaces = true,
+						tabSize = 2,
+					},
+				},
+				javascript = {
+					format = {
+						indentSize = 2,
+						convertTabsToSpaces = true,
+						tabSize = 2,
+					},
+					implicitProjectConfig = {
+						checkJs = true,
+					},
+				},
+			},
+		})
+
+		-- Setup any other servers that mason installs but aren't explicitly configured
+		local configured_servers = {
+			"lua_ls",
+			"clangd",
+			"pyright",
+			"prismals",
+			"yamlls",
+			"helm_ls",
+			"eslint",
+			"denols",
+			"ts_ls",
+		}
+
+		local mason_lspconfig = require("mason-lspconfig")
+		local installed_servers = mason_lspconfig.get_installed_servers()
+
+		for _, server in ipairs(installed_servers) do
+			local is_configured = false
+			for _, configured in ipairs(configured_servers) do
+				if server == configured then
+					is_configured = true
+					break
+				end
+			end
+
+			if not is_configured then
+				lspconfig[server].setup({
+					capabilities = capabilities,
+				})
+			end
+		end
 	end,
 }
