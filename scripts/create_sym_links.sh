@@ -15,5 +15,6 @@ create_symlink ~/dotfiles/.vimrc ~/.vimrc
 create_symlink ~/dotfiles/.zshrc ~/.zshrc
 create_symlink ~/dotfiles/.tmux.conf ~/.tmux.conf
 create_symlink ~/dotfiles/nvim ~/.config/nvim
+create_symlink ~/dotfiles/nvim-minimal ~/.config/nvim-minimal
 create_symlink ~/dotfiles/kitty/kitty.conf ~/.config/kitty/kitty.conf
 create_symlink ~/dotfiles/kitty/current-theme.conf ~/.config/kitty/current-theme.conf

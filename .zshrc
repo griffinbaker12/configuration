@@ -30,8 +30,12 @@ alias c="clear"
 alias sz="source ~/.zshrc"
 alias st="tmux source-file ~/.tmux.conf"
 
+# Every nvim launch uses the minimal config (~/dotfiles/nvim-minimal).
+# The old full config is still at ~/dotfiles/nvim: run `vold` to use it.
+export NVIM_APPNAME=nvim-minimal
 alias v="nvim"
 alias pv="poetry run nvim ."
+alias vold="NVIM_APPNAME=nvim nvim"
 
 alias grab='deno --allow-run --allow-read ~/projects/grab/main.ts'
 

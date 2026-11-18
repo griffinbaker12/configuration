@@ -1,0 +1,155 @@
+vim.g.mapleader = " "
+
+-- Basic mappings
+vim.keymap.set("i", "jk", "<Esc>", { noremap = true }) -- Exit insert mode with jk
+vim.keymap.set("i", "jj", "<Esc>", { noremap = true }) -- Exit insert mode with jj
+vim.keymap.set("n", "Q", "<nop>") -- Disable Ex mode
+
+-- Line navigation: use H/L for start/end of line instead of viewport top/bottom
+vim.keymap.set({ "n", "x", "o" }, "H", "^") -- Jump to first non-blank character of line
+vim.keymap.set({ "n", "x", "o" }, "L", "g_") -- Jump to last non-blank character of line
+
+-- Search and replace
+vim.keymap.set("n", "n", "nzzzv") -- Keep search results centered
+vim.keymap.set("n", "N", "Nzzzv")
+vim.keymap.set("n", "<leader>cs", ":nohlsearch<CR>", { noremap = true, silent = true }) -- Clear search highlighting
+vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]]) -- Search and replace word under cursor
+
+-- Moving lines and centering
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv") -- Move selected lines down
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv") -- Move selected lines up
+vim.keymap.set("n", "J", "mzJ`z") -- Join lines keeping cursor position
+vim.keymap.set("n", "<C-d>", "<C-d>zz") -- Half-page down keeping cursor centered
+vim.keymap.set("n", "<C-u>", "<C-u>zz") -- Half-page up keeping cursor centered
+
+-- Window splits and resizing
+vim.keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })
+vim.keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })
+vim.keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" })
+vim.keymap.set("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current split" })
+vim.keymap.set("n", "<leader>sr", "<C-w>L", { desc = "Move split to the right" })
+vim.keymap.set("n", "<leader>sb", "<C-w>J", { desc = "Move split to the bottom" })
+vim.keymap.set("n", "+", ":vertical resize +5<CR>") -- Increase window width
+vim.keymap.set("n", "_", ":vertical resize -5<CR>") -- Decrease window width
+vim.keymap.set("n", "=", ":resize +5<CR>") -- Increase window height
+vim.keymap.set("n", "-", ":resize -5<CR>") -- Decrease window height
+
+-- Tab management
+vim.keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" })
+vim.keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" })
+vim.keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" })
+vim.keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" })
+vim.keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" })
+
+-- Register operations
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]]) -- Delete to black hole register
+vim.keymap.set({ "n", "v" }, "<leader>D", [["_D]])
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]]) -- Yank to system clipboard
+vim.keymap.set("n", "<leader>Y", [["+Y]])
+vim.keymap.set(
+	"n",
+	"<leader>ya",
+	"mngg:%y+<CR>`n",
+	{ desc = "Yank entire file to system clipboard (preserving cursor)" }
+)
+vim.keymap.set("n", "<leader>yp", function()
+	local ref = vim.fn.expand("%:.") .. ":" .. vim.fn.line(".")
+	vim.fn.setreg("+", ref)
+	vim.fn.setreg('"', ref)
+	vim.notify("Yanked " .. ref)
+end, { desc = "Yank file path:line number to system clipboard" })
+vim.keymap.set("n", "<leader>da","mngg:%d<CR>`n", { desc = "Delete entire file contents (preserving cursor)" })
+
+-- Visual mode improvements
+vim.keymap.set("v", "<", "<gv") -- Better indenting - keep visual selection
+vim.keymap.set("v", ">", ">gv")
+vim.keymap.set("v", "p", '"_dp') -- Better pasting - don't copy replaced text
+vim.keymap.set("v", "P", '"_dP')
+
+-- rg search into the quickfix list without the "Press ENTER" shell output,
+-- e.g. <leader>rg then: 'name = "pypdf"' -g poetry.lock
+vim.keymap.set("n", "<leader>rg", ":silent grep! ", { desc = "rg into quickfix" })
+
+-- Command mode mappings
+vim.keymap.set("c", "<Down>", "<C-n>", { noremap = true, silent = true }) -- Next command in history
+vim.keymap.set("c", "<Up>", "<C-p>", { noremap = true, silent = true }) -- Previous command in history
+
+-- Misc utilities
+vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true }) -- Make current file executable
+vim.keymap.set("n", "<leader><leader>", function()
+	vim.cmd("so")
+end) -- Source current file
+vim.keymap.set(
+	"n",
+	"<C-f>",
+	"<cmd>silent !tmux neww ~/dotfiles/bin/tmux_sessionizer.sh<CR>",
+	{ noremap = true, silent = true }
+) -- Open tmux sessionizer
+
+-- Yank highlighting
+vim.api.nvim_create_autocmd("TextYankPost", {
+	desc = "Highlight when yanking (copying) text",
+	group = vim.api.nvim_create_augroup("Highlight-Yank", { clear = true }),
+	callback = function()
+		vim.highlight.on_yank()
+	end,
+})
+
+-- So that I move around the same way as I do in the cli
+vim.keymap.set("c", "<A-b>", "<C-Left>", { noremap = true })
+vim.keymap.set("c", "<A-f>", "<C-Right>", { noremap = true })
+
+-- Add empty lines above and below cursor without moving
+vim.keymap.set("n", "[<Space>", function()
+	-- Save cursor position
+	local cursor_pos = vim.fn.getcurpos()
+	-- Add line above
+	vim.cmd("normal! O")
+	-- Delete text in the new line (in case autoindent adds something)
+	vim.cmd("normal! 0D")
+	-- Restore cursor position (but now one line down because of inserted line)
+	cursor_pos[2] = cursor_pos[2] + 1
+	vim.fn.setpos(".", cursor_pos)
+end, { desc = "Add empty line above" })
+
+vim.keymap.set("n", "]<Space>", function()
+	-- Save cursor position
+	local cursor_pos = vim.fn.getcurpos()
+	-- Add line below
+	vim.cmd("normal! o")
+	-- Delete text in the new line (in case autoindent adds something)
+	vim.cmd("normal! 0D")
+	-- Restore cursor position
+	vim.fn.setpos(".", cursor_pos)
+end, { desc = "Add empty line below" })
+
+-- vim.keymap.set("n", "<leader>msg", "<cmd>messages<CR>", { desc = "Show system messages" })
+vim.keymap.set("n", "<leader>msg", "<cmd:new | r!dmesg<CR>", { desc = "Show system messages" })
+
+-- Because I use the backtick for the tmux leader key
+vim.keymap.set({ "i" }, "<A-q>", "``<Left>", { noremap = true, desc = "Insert two backticks" })
+
+-- Option-h/j/k/l moves between splits. Kitty sends these as <M-h> etc.; inside
+-- tmux, .tmux.conf turns Option-h into C-h for vim panes, so map both. At the
+-- edge of nvim it hands off to the next tmux pane (unless the pane is zoomed).
+local tmux_dir = { h = "L", j = "D", k = "U", l = "R" }
+local function navigate(dir)
+	local win = vim.api.nvim_get_current_win()
+	vim.cmd("wincmd " .. dir)
+	if vim.api.nvim_get_current_win() ~= win or not vim.env.TMUX then
+		return
+	end
+	if vim.trim(vim.fn.system({ "tmux", "display-message", "-p", "#{window_zoomed_flag}" })) == "1" then
+		return
+	end
+	vim.fn.system({ "tmux", "select-pane", "-" .. tmux_dir[dir] })
+end
+for dir in pairs(tmux_dir) do
+	for _, mod in ipairs({ "M", "C" }) do
+		vim.keymap.set("n", "<" .. mod .. "-" .. dir .. ">", function()
+			navigate(dir)
+		end, { silent = true, desc = "Move to split (or tmux pane) " .. dir })
+	end
+end
+vim.keymap.set("n", "<M-\\>", "<cmd>wincmd p<CR>", { silent = true, desc = "Previous split" })
+vim.keymap.set("n", "<C-\\>", "<cmd>wincmd p<CR>", { silent = true, desc = "Previous split" })
