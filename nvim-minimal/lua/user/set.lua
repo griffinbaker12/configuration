@@ -23,6 +23,7 @@ vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
 -- Off on purpose: sonokai falls back to its 256-color cterm palette.
+-- :Theme can turn it on (sonokai-truecolor); see lua/user/theme.lua.
 vim.opt.termguicolors = false
 
 vim.opt.scrolloff = 8

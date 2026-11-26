@@ -17,6 +17,9 @@ require("user.reload").setup()
 -- :Font -- switch kitty between JetBrains Mono, Berkeley Mono and SF Mono
 require("user.font").setup()
 
+-- :Theme -- switch colorscheme variants (sonokai 256-color / true color, ...)
+require("user.theme").setup()
+
 -- Tab labels: file name only, plus the parent folder when two tabs share a name
 require("user.tabline").setup()
 

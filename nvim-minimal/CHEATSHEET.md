@@ -152,3 +152,4 @@ Not a jump: `j` `k` `12j` `w` `b` `f` `t` `<C-d>` `<C-u>`, your `H` / `L`.
 | `<leader>gs`            | git status (fugitive)                           |
 | `<leader>gd`            | diff this file vs git                           |
 | `:Font`                 | switch kitty font                               |
+| `:Theme`                | switch theme variant (sonokai 256-color / true color); remembered across restarts |

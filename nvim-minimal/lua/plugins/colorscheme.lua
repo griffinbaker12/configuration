@@ -14,6 +14,7 @@ return {
 				vim.api.nvim_set_hl(0, "TabLineSel", { ctermfg = 250, ctermbg = 16, fg = "#e2e2e3", bg = "#000000" })
 			end,
 		})
-		vim.cmd.colorscheme("sonokai")
+		-- Loads the variant last picked with :Theme (sonokai, 256-color, by default).
+		require("user.theme").load()
 	end,
 }
